@@ -16,6 +16,16 @@ router.post('/createproduct', async (req, res) => {
     res.json(newproduct)
 })
 
+//fetching products///////////////////////////////////
+router.get("/getproducts", (request, response) => {
+    productsmodel.find({}, (err, result) => {
+        if (!err) {
+            response.json(result)
+        } else {
+            response.json(err)
+        }
+    })
+})
 
 
 

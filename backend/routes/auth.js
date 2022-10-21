@@ -25,7 +25,7 @@ router.post('/createuser',async (req ,res)=>{
 
 
   user =  await User.create({
-    name: req.body.name,
+    
     email: req.body.email,
     password: secpass
   });
@@ -84,7 +84,7 @@ router.post('/login', [
 })
 
 
-///////detting user data by /getuser
+///////getting user data by /getuser
 router.post('/getuser', fetchuser, async (req,res)=>{
 
   try {
