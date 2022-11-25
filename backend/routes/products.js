@@ -9,11 +9,15 @@ const productsmodel = require('../models/Products')
 
 //uploading product /////////////////////////////////
 router.post('/createproduct', async (req, res) => {
-    const product = req.body;
-    const newproduct = new productsmodel(product);
-    await newproduct.save()
-
-    res.json(newproduct)
+    try{ const product = req.body;
+        const newproduct = new productsmodel(product);
+        await newproduct.save()
+    
+        res.json(newproduct)
+    }catch(err){
+        res.json(err);
+    }
+   
 })
 
 //fetching products///////////////////////////////////

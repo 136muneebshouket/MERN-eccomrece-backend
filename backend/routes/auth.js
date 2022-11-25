@@ -37,7 +37,22 @@ router.post('/createuser',async (req ,res)=>{
   const authtoken = jwt.sign(data,JWT_SECRET);
 
  
-    res.send({authtoken})
+    // res.send({authtoken})
+    // res.cookie('jwt',{authtoken}, { expires: new Date(Date.now() + 900000),
+    //   httpOnly: true
+    // }).status(200);
+   
+
+    res.cookie('token', authtoken, 
+    { expires: new Date(Date.now() + 900000),
+      httpOnly: true
+     }
+     ).status(200);
+
+    //  const Authtoken ={
+    //   authtoken
+    //  }
+  res.json({status:200,authtoken,data});
 })
 
 
@@ -74,7 +89,13 @@ router.post('/login', [
     }
     const JWT_SECRET = 'Harryisagoodboy';
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res.json({authtoken})
+
+    res.cookie('token', authtoken, 
+    { expires: new Date(Date.now() + 900000),
+       httpOnly: true
+     }
+     ).status(200);
+  res.json({ authtoken });
 
   } catch (error) {
     console.error(error.message);
@@ -90,11 +111,12 @@ router.post('/getuser', fetchuser, async (req,res)=>{
   try {
     const userId =req.user.id;
     const user = await User.findById(userId).select('-password')
-    res.send(user);
+    // res.send(user);
+    res.json(user);
 
   }catch (error) {
     console.error(error.message);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({status:500,error});
   }
 
 })
