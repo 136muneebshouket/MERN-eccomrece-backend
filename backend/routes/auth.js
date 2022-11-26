@@ -95,7 +95,7 @@ router.post('/login', [
        httpOnly: true
      }
      ).status(200);
-  res.json({ authtoken });
+  res.json({ status:200,authtoken,data});
 
   } catch (error) {
     console.error(error.message);
@@ -103,6 +103,9 @@ router.post('/login', [
   }
 
 })
+
+
+
 
 
 ///////getting user data by /getuser
