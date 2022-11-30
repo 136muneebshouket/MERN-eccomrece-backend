@@ -34,10 +34,12 @@ const cartModel = require('../models/Carts')
 
 router.post('/createcart', async (req, res) => {
   try {
+   
     let cart = await cartModel.findOne({ userid: req.body.userid })
     if (cart && cart.id) {
-      console.log(cart.id)
-      await cartModel.updateOne({ id: cart.id }, { $push: { cartItems: req.body.cartItems[0] } })
+     
+      await cartModel.updateOne({ _id: cart.id }, { $push: { cartItems: req.body.cartItems[0] } })
+  
     } else {
       await cartModel.create(req.body)
     }
@@ -51,25 +53,27 @@ router.post('/createcart', async (req, res) => {
 
 
 //route to get carts
-router.get("/getcarts/:id", (request, response) => {
+router.get("/getcarts/:id", async (request, response) => {
   const userid = request.params.id;
-  try {
+  let user = await cartModel.findOne({ userid: userid })
+  if (user) {
+    try {
 
 
-    cartModel.
-      findOne({ userid: userid }).
-      populate('cartItems.product').
-      exec(function (err, cartModel) {
-        if (err) { return response.json(err) }
+      cartModel.
+        findOne({ userid: userid }).
+        populate('cartItems.product').
+        exec(function (err, cartModel) {
+          if (err) { return response.json(err) }
 
-        // console.log( cartModel.cartItems);
-        response.json(cartModel.cartItems)
-      });
-  } catch (error) {
-    res.json({ status: 0, message: error.message })
+          // console.log( cartModel.cartItems);
+          response.json(cartModel.cartItems)
+        });
+    } catch (error) {
+      res.json({ status: 0, message: error.message })
+    }
+
   }
-
-
 
 
   // console.log(userid);
@@ -82,7 +86,7 @@ router.get("/getcarts/:id", (request, response) => {
 
 //route for deleting cart
 router.delete('/deletecart/:id/:id2', async (req, res) => {
-  
+
   //  console.log(req.params.id);
   //  console.log(req.params.id2);
   // const userid=request.params.id2;
@@ -91,8 +95,8 @@ router.delete('/deletecart/:id/:id2', async (req, res) => {
 
     let cart = await cartModel.findOne({ userid: req.params.id2 })
     if (cart && cart.id) {
-      await cartModel.updateOne({ id: cart.id }, { $pull: { cartItems:  {_id: req.params.id} } })
-    } 
+      await cartModel.updateOne({ _id: cart.id }, { $pull: { cartItems: { _id: req.params.id } } })
+    }
     res.json({ status: 1 })
     // {userid: 123, cartItems: [{product: 12312}]}
   } catch (error) {
